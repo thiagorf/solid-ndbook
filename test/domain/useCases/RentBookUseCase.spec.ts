@@ -34,7 +34,17 @@ const makeSut = () => {
     }
 }
 
+const makeBuilders = () => {
+    const rentBuilder = RentBuilder.aRent().build();
+    const bookBuilder = BookBuilder.aBook().build();
+    const userBuilder = UserBuilder.aUser().build();
 
+    return {
+        rentBuilder,
+        bookBuilder,
+        userBuilder
+    }
+}
 
 describe("Rent Book Use Case", () => {
     /*
@@ -44,13 +54,21 @@ describe("Rent Book Use Case", () => {
     Retorna aluguel criado ou lança um erro
 */
     test("Should be able to rent a book", async () => {
-        const rentBuilder = RentBuilder.aRent().build();
-        const bookBuilder = BookBuilder.aBook().build();
-        const userBuilder = UserBuilder.aUser().build();
+        const {
+            rentBuilder,
+            bookBuilder,
+            userBuilder
+        } = makeBuilders()
 
-        const { sut, bookRepository, userRepository, stockRepository } = makeSut();
+        const { 
+            sut, 
+            bookRepository, 
+            userRepository, 
+            stockRepository 
+        } = makeSut();
         
         const stock = await stockRepository.create(4);
+
         await bookRepository.create({...bookBuilder, stock_id: stock.id});
         await userRepository.create(userBuilder)
 
@@ -60,7 +78,9 @@ describe("Rent Book Use Case", () => {
     })
 
     test("Should not be able to rent a invalid book", async () => {
-        const rentBuilder = RentBuilder.aRent().build();
+        const {
+            rentBuilder
+        } = makeBuilders()
         
         const { sut } = makeSut();
 
@@ -71,8 +91,10 @@ describe("Rent Book Use Case", () => {
     })
     
     test("Should not be able to rent a book with a invalid user", async () => {
-        const rentBuilder = RentBuilder.aRent().build();
-        const bookBuilder = BookBuilder.aBook().build();
+        const {
+            rentBuilder,
+            bookBuilder
+        } = makeBuilders()
 
         const { sut, bookRepository } = makeSut();
 
@@ -84,9 +106,11 @@ describe("Rent Book Use Case", () => {
     })
 
     test("Should not be able to rent a book if the amount is zero", async () => {
-        const rentBuilder = RentBuilder.aRent().build();
-        const bookBuilder = BookBuilder.aBook().build();
-        const userBuilder = UserBuilder.aUser().build();
+        const {
+            rentBuilder,
+            bookBuilder,
+            userBuilder
+        } = makeBuilders()
 
         const { sut, bookRepository, userRepository, stockRepository } = makeSut();
 
@@ -102,9 +126,11 @@ describe("Rent Book Use Case", () => {
     })
 
     test("Should be able to decrease the amount of book after a successful rent", async () => {
-        const rentBuilder = RentBuilder.aRent().build();
-        const bookBuilder = BookBuilder.aBook().build();
-        const userBuilder = UserBuilder.aUser().build();
+        const {
+            rentBuilder,
+            bookBuilder,
+            userBuilder
+        } = makeBuilders()
 
         const { sut, bookRepository, userRepository, stockRepository } = makeSut();
 
@@ -121,9 +147,11 @@ describe("Rent Book Use Case", () => {
     })
 
     test("Should not be able to rent a book for more than three weeks", async () => {
-        const rentBuilder = RentBuilder.aRent().build();
-        const bookBuilder = BookBuilder.aBook().build();
-        const userBuilder = UserBuilder.aUser().build();
+        const {
+            rentBuilder,
+            bookBuilder,
+            userBuilder
+        } = makeBuilders()
 
         const { sut, bookRepository, userRepository, stockRepository } = makeSut();
 
@@ -139,11 +167,18 @@ describe("Rent Book Use Case", () => {
     })
 
     test("Should not be able to rent a book with invalid date", async () => {
-        const rentBuilder = RentBuilder.aRent().build();
-        const bookBuilder = BookBuilder.aBook().build();
-        const userBuilder = UserBuilder.aUser().build();
+        const {
+            rentBuilder,
+            bookBuilder,
+            userBuilder
+        } = makeBuilders()
 
-        const { sut, bookRepository, userRepository, stockRepository } = makeSut();
+        const { 
+            sut, 
+            bookRepository, 
+            userRepository, 
+            stockRepository 
+        } = makeSut();
 
         const stock = await stockRepository.create(4);
         
@@ -156,9 +191,11 @@ describe("Rent Book Use Case", () => {
     })
 
     test("Should not be able to rent a book if the user already have three rent", async () => {
-        const rentBuilder = RentBuilder.aRent().build();
-        const bookBuilder = BookBuilder.aBook().build();
-        const userBuilder = UserBuilder.aUser().build();
+        const {
+            rentBuilder,
+            bookBuilder,
+            userBuilder
+        } = makeBuilders()
 
         const { 
             sut, 
