@@ -31,5 +31,11 @@ export class InMemoryRentRepository implements IRentRepository {
 
         return rent
     }
+
+    async findRentByUser(user_id: string): Promise<Rent[]> {
+        const rent = this.rent.filter(rent => rent.user_id === user_id)
+
+        return rent;
+    }
     
 }

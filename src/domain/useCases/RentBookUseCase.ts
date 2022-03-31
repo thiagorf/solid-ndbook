@@ -46,6 +46,18 @@ export class RentBookUseCase {
 
         if(result > 21) throw new Error("Cannot Rent a book for more than three weeks")
         
+        const userRents = await this.rentRepository.findRentByUser(user_id)
+        console.log(userRents);
+        
+
+        if(userRents) {
+            const userHaveThreeRents = (Object.keys(userRents).length === 3)
+            console.log(userHaveThreeRents);
+            
+            if(userHaveThreeRents) throw new Error("User already have three rents")
+        }
+        
+
         const rent = await this.rentRepository.create({
             user_id,
             book_id,

@@ -154,4 +154,31 @@ describe("Rent Book Use Case", () => {
             await sut.perform({...rentBuilder, end_date: new Date(2021, 2, 20)})
         }).rejects.toThrow("Invalid Date")
     })
+
+    test("Should not be able to rent a book if the user already have three rent", async () => {
+        const rentBuilder = RentBuilder.aRent().build();
+        const bookBuilder = BookBuilder.aBook().build();
+        const userBuilder = UserBuilder.aUser().build();
+
+        const { 
+            sut, 
+            bookRepository, 
+            userRepository, 
+            stockRepository, 
+            rentRepository 
+        } = makeSut();
+
+        const stock = await stockRepository.create(4);
+        
+        await bookRepository.create({...bookBuilder, stock_id: stock.id});
+        await userRepository.create(userBuilder);
+
+        await rentRepository.create({...rentBuilder, end_date: new Date(2022, 2, 20)})
+        await rentRepository.create({...rentBuilder, end_date: new Date(2022, 2, 20)})
+        await rentRepository.create({...rentBuilder, end_date: new Date(2022, 2, 20)})
+
+        expect(async () => {
+            await sut.perform({...rentBuilder, end_date: new Date(2022, 2, 20)})
+        }).rejects.toThrow("User already have three rents")
+    });
 })

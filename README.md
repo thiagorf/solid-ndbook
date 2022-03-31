@@ -4,7 +4,9 @@ A simple node.js application in progress, built with clean architecture and tdd 
 
 
 
-## Todo
+<!--link todo items with they specific class -->
+
+## Todo Use cases
 - [x] RegisterBookUseCase
 - [x] RentBookUseCase
 - [ ] RegisterUserUseCase

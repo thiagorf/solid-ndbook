@@ -14,4 +14,6 @@ export interface IRentRepository {
         end_date,
         rent_date
     }:RentProps): Promise<Rent>
+
+    findRentByUser(user_id: string): Promise<Rent[]>
 } 
