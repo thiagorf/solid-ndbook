@@ -7,7 +7,7 @@ A simple node.js application in progress, built with clean architecture and tdd 
 ## Todo
 - [x] RegisterBookUseCase
 - [x] RentBookUseCase
-- [] RegisterUserUseCase
-- [] AuthenticateUserUseCase
-- [] FinishRentUseCase
-- [] SearchBookUseCase (with filter and pagination)
+- [ ] RegisterUserUseCase
+- [ ] AuthenticateUserUseCase
+- [ ] FinishRentUseCase
+- [ ] SearchBookUseCase (with filter and pagination)
