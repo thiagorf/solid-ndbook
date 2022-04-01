@@ -16,4 +16,8 @@ export interface IRentRepository {
     }:RentProps): Promise<Rent>
 
     findInProgressRentByUser(user_id: string): Promise<Rent[]>
+
+    findRentBy(rent_id: string): Promise<Rent>
+
+    finishRent(rent: Rent): Promise<Rent>
 } 

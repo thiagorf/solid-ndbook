@@ -21,6 +21,12 @@ export class RentBuilder {
         return new RentBuilder()
     }
 
+    public withFinishedProgress() {
+        this.rent.inProgress = false
+
+        return this;
+    }
+
     public build() {
         return this.rent;
     }

@@ -40,4 +40,11 @@ export class InMemoryStockRepository implements IStockRepository {
         return this.stock[stockIndex];
     }
 
+    async increaseAmount(stock_id: string): Promise<Stock> {
+        const stockIndex = this.stock.findIndex(stock => stock.id === stock_id)
+
+        this.stock[stockIndex].amount++
+
+        return this.stock[stockIndex];
+    }
 } 

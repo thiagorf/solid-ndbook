@@ -7,4 +7,5 @@ export interface IStockRepository {
     create(amount: number): Promise<Stock>
     updateStockAmountForBook(stock: Stock): Promise<void>
     decreaseAmount(stock_id: string): Promise<Stock>
+    increaseAmount(stock_id: string): Promise<Stock>
 }

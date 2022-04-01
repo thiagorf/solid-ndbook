@@ -39,5 +39,15 @@ export class InMemoryRentRepository implements IRentRepository {
 
         return rent;
     }
+
+    //Padrao update ou um método especial para o rent
+    async finishRent(rent: Rent): Promise<Rent> {
+        const finishRent = this.rent.findIndex(rentItem => rentItem.id === rent.id)
+
+        this.rent[finishRent].receive_date = new Date();
+        this.rent[finishRent].inProgress = false
+
+        return this.rent[finishRent]
+    }
     
 }
