@@ -15,7 +15,8 @@ export class InMemoryRentRepository implements IRentRepository {
             user_id,
             book_id,
             rent_date,
-            end_date
+            end_date,
+            inProgress: true       
         }
 
         this.id++
@@ -32,8 +33,9 @@ export class InMemoryRentRepository implements IRentRepository {
         return rent
     }
 
-    async findRentByUser(user_id: string): Promise<Rent[]> {
+    async findInProgressRentByUser(user_id: string): Promise<Rent[]> {
         const rent = this.rent.filter(rent => rent.user_id === user_id)
+        .filter(rentIs => rentIs.inProgress === true)
 
         return rent;
     }

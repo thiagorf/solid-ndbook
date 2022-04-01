@@ -14,6 +14,7 @@ export class RentBuilder {
         user_id: this.userBuilder.id,
         end_date: new Date(),
         rent_date: new Date(),
+        inProgress: true
     }
 
     static aRent() {

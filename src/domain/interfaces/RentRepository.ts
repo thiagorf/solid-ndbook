@@ -15,5 +15,5 @@ export interface IRentRepository {
         rent_date
     }:RentProps): Promise<Rent>
 
-    findRentByUser(user_id: string): Promise<Rent[]>
+    findInProgressRentByUser(user_id: string): Promise<Rent[]>
 } 

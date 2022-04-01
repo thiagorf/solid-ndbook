@@ -34,7 +34,7 @@ export class RentBookUseCase {
 
         await this.checkDatesProvided(rent_date, end_date)
         
-        const userRents = await this.rentRepository.findRentByUser(user_id)
+        const userRents = await this.rentRepository.findInProgressRentByUser(user_id)
         
         if(userRents) {
             const userHaveThreeRents = (Object.keys(userRents).length === 3) 
