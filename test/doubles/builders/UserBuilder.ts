@@ -6,7 +6,9 @@ export class UserBuilder {
 
     private user: User = {
         id: "0",
-        name: "Thiago"
+        name: "Thiago",
+        email: "test@gmail.com",
+        password: "1234"
     }
 
     static aUser() {

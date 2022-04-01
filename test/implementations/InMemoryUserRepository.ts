@@ -2,7 +2,9 @@ import { User } from "../../src/domain/entities/User";
 import { IUserRepository } from "../../src/domain/interfaces/UserRepository";
 
 type UserProps = {
-    name: string
+    name: string;
+    email: string;
+    password: string;
 }
 
 export class InMemoryUserRepository implements IUserRepository{
@@ -17,10 +19,17 @@ export class InMemoryUserRepository implements IUserRepository{
         return user;
     }
 
-    async create({ name }: UserProps) {
+    async create({ 
+        name, 
+        email, 
+        password 
+    }: UserProps) {
+        
         const user: User = {
             id: this.id.toString(),
-            name
+            name,
+            email,
+            password
         }
 
         this.id++
@@ -32,5 +41,11 @@ export class InMemoryUserRepository implements IUserRepository{
 
     async getAlluser() {
         return this.user
+    }
+
+    async findByEmail(email: string): Promise<User> {
+        const user = this.user.find(user => user.email === email)
+
+        return user;
     }
 }
