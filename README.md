@@ -9,7 +9,7 @@ A simple node.js application in progress, built with clean architecture and tdd 
 ## Todo Use cases
 - [x] RegisterBookUseCase
 - [x] RentBookUseCase
-- [ ] RegisterUserUseCase
+- [X] RegisterUserUseCase
 - [ ] AuthenticateUserUseCase
 - [ ] FinishRentUseCase
 - [ ] SearchBookUseCase (with filter and pagination)
