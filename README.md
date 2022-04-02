@@ -11,5 +11,5 @@ A simple node.js application in progress, built with clean architecture and tdd 
 - [x] RentBookUseCase
 - [X] RegisterUserUseCase
 - [ ] AuthenticateUserUseCase
-- [ ] FinishRentUseCase
+- [X] FinishRentUseCase
 - [ ] SearchBookUseCase (with filter and pagination)
