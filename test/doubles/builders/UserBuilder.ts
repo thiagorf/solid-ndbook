@@ -1,3 +1,4 @@
+import { hash, hashSync } from "bcrypt";
 import { User } from "../../../src/domain/entities/User";
 
 
@@ -13,6 +14,12 @@ export class UserBuilder {
 
     static aUser() {
         return new UserBuilder();
+    }
+
+    public withHashPassword() {
+        this.user.password = hashSync("1234", 8)
+
+        return this
     }
 
     public build() {

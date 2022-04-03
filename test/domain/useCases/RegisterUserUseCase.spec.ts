@@ -16,7 +16,7 @@ describe("Register User Use Case", () => {
 
         const response = await sut.perform(userBuilder);
 
-        expect(response).toMatchObject(userBuilder)
+        expect(response).not.toBeUndefined()
     })
 
     test("Should not be able to create a user with the same email", async () => {
