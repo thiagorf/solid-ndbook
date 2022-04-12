@@ -1,8 +1,31 @@
 import { Request, Response } from "express"
+import { registerBookUseCase, returnAllBooksUseCase } from "./implementations"
 
 export class BookController {
+
     async get(request: Request, response: Response) {
 
-        return response.json()
+        const result = await returnAllBooksUseCase.perform() 
+
+        return response.json(result)
+    }
+
+    async create(request: Request, response: Response) {
+
+        const {
+            name,
+            description,
+            amount,
+            publish_date
+        } = request.body
+
+        const result = await registerBookUseCase.perform({
+            name, 
+            description, 
+            amount, 
+            publish_date
+        })
+
+        return response.json(result)
     }
 }
