@@ -38,4 +38,8 @@ export class InMemoryBookRepository implements IBookRepository{
 
         return book;
     }
+
+    async findAll() {
+        return this.book
+    }
 }
