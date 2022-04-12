@@ -26,7 +26,7 @@ model Book {
 
 model Stock {
   id  String @id @default(uuid())
-  amount Int
+  amount Int 
   book Book? 
 
 }
@@ -54,6 +54,6 @@ model Rent {
   rent_date DateTime
   end_date DateTime
   receive_date DateTime?
-  inProgress Boolean
+  inProgress Boolean @default(true)
 
 }

@@ -1,5 +1,10 @@
 import { User } from "../entities/User";
 
+export type UserProps = {
+    name: string,
+    email: string,
+    password: string
+}
 
 
 export interface IUserRepository {
@@ -8,6 +13,6 @@ export interface IUserRepository {
         name,
         email,
         password
-    }): Promise<User>
+    }: UserProps): Promise<User>
     findByEmail(email: string): Promise<User>
 }
