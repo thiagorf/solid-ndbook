@@ -15,10 +15,7 @@ export class AuthenticateUserUseCase {
         private userRepository: IUserRepository
     ) {}
 
-    async perform({
-       email,
-       password
-    }: Login) {
+    async perform({email,password }: Login)  {
 
         const userExists = await this.userRepository.findByEmail(email)
         
@@ -40,6 +37,6 @@ export class AuthenticateUserUseCase {
 
         return {
             token
-            };
+        };
    }
 }
