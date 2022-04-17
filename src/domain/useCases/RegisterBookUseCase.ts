@@ -1,5 +1,6 @@
 import { IBookRepository } from "../interfaces/BookRepository";
 import { IStockRepository } from "../interfaces/StockRepository";
+import { Validate } from "../validation"
 
 type RequestBookProps = {
     name: string;
@@ -21,6 +22,9 @@ export class RegisterBookUseCase {
         publish_date,
         amount
     }: RequestBookProps) {
+
+        //amount can be optional
+        Validate.input({name, description, publish_date, amount})
 
         const bookAlreadyExists = await this.bookRepository.findByName(name);
 

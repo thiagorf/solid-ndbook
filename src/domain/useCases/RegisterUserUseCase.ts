@@ -1,5 +1,6 @@
 import { IUserRepository } from "../interfaces/UserRepository";
 import {hash} from 'bcrypt';
+import { Validate } from "../validation";
 
 type UserProps = {
     name: string;
@@ -18,6 +19,9 @@ export class RegisterUserUseCase {
         email,
         password
     }: UserProps) {
+
+        Validate.input({name, email, password})
+
         const userAlReadyExists = await this.userRepository.findByEmail(email);
 
         if(userAlReadyExists) throw new Error("User email is already been used")

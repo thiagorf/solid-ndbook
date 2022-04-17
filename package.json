@@ -9,13 +9,16 @@
     "bcrypt": "^5.0.1",
     "dayjs": "^1.11.0",
     "express": "^4.17.3",
+    "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
-    "prisma": "^3.12.0"
+    "prisma": "^3.12.0",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^27.4.1",
     "@types/jsonwebtoken": "^8.5.8",
+    "@types/validator": "^13.7.2",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.3",
     "ts-node-dev": "^1.1.8",
@@ -23,6 +26,6 @@
   },
   "scripts": {
     "test": "jest",
-    "dev": "ts-node-dev src/infra/app.ts"
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules --respawn src/infra/app.ts"
   }
 }

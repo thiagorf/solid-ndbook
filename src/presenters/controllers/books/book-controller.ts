@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { registerBookUseCase, returnAllBooksUseCase } from "./implementations"
+import { registerBookUseCase, returnAllBooksUseCase } from "./abstraction"
 
 export class BookController {
 

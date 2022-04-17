@@ -4,6 +4,7 @@ import { IBookRepository } from "../interfaces/BookRepository";
 import { IRentRepository } from "../interfaces/RentRepository";
 import { IStockRepository } from "../interfaces/StockRepository";
 import { IUserRepository } from "../interfaces/UserRepository";
+import { Validate } from "../validation";
 
 type RentRequest = {
     user_id: string;
@@ -27,6 +28,8 @@ export class RentBookUseCase {
         end_date,
         rent_date
     }: RentRequest) {
+
+        Validate.input({end_date, rent_date})
 
         const { bookIsProvided } = await this.checkRequirementsForRent(book_id, user_id)
 
@@ -82,7 +85,7 @@ export class RentBookUseCase {
         //possivel extração da verifição de datas para uma classe própria
         const result = this.dateAdpter.checkDateDifference(rent_date, end_date)
         
-        if(result < 0) throw new Error("Invalid Date")
+        if(result < 0) throw new Error("Invalid Date")  
 
         if(result > 21) throw new Error("Cannot Rent a book for more than three weeks")
     }
