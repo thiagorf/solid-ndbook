@@ -28,7 +28,7 @@ export class AuthenticateUserUseCase {
         const token = jwt.sign({
             email
         },
-        "secret"
+        process.env.JWT_SECRET
         , 
         {
             expiresIn: "1h",
