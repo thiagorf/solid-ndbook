@@ -23,8 +23,10 @@ export class RegisterBookUseCase {
         amount
     }: RequestBookProps) {
 
+        const formatedDate = new Date(publish_date).toISOString()
+
         //amount can be optional
-        Validate.input({name, description, publish_date, amount})
+        Validate.input({name, description, formatedDate, amount})
 
         const bookAlreadyExists = await this.bookRepository.findByName(name);
 

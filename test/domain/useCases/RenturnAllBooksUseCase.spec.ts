@@ -2,6 +2,7 @@ import { ReturnAllBooksUseCase } from "../../../src/domain/useCases/ReturnAllBoo
 import { BookBuilder } from "../../doubles/builders/BookBuilder";
 import { InMemoryBookRepository } from "../../implementations/InMemoryBookRepository";
 
+jest.useFakeTimers('modern').setSystemTime(new Date(2022, 2, 1, 7));
 
 
 describe("Renturn All Books Use Case", () => {

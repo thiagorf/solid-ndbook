@@ -29,7 +29,10 @@ export class RentBookUseCase {
         rent_date
     }: RentRequest) {
 
-        Validate.input({end_date, rent_date})
+        const formatedEndDate = new Date(end_date).toISOString()
+        const formatedRentDate = new Date(rent_date).toISOString()
+
+        Validate.input({formatedEndDate, formatedRentDate})
 
         const { bookIsProvided } = await this.checkRequirementsForRent(book_id, user_id)
 

@@ -9,7 +9,7 @@ export class UserBuilder {
         id: "0",
         name: "Thiago",
         email: "test@gmail.com",
-        password: "1234"
+        password: "123456"
     }
 
     static aUser() {
@@ -17,7 +17,7 @@ export class UserBuilder {
     }
 
     public withHashPassword() {
-        this.user.password = hashSync("1234", 8)
+        this.user.password = hashSync("123456", 8)
 
         return this
     }

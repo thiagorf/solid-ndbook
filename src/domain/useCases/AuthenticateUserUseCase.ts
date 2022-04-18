@@ -24,11 +24,17 @@ export class AuthenticateUserUseCase {
         const checkPassword = await compare(password, userExists.password)
 
         if(!checkPassword) throw new Error("Invalid email or password")
+        
+        const secretKey = process.env.JWT_SECRET  || "secret";
+        
+        console.log(secretKey);
+        
+        if(!secretKey) throw new Error("Invalid token signature")
 
         const token = jwt.sign({
             email
         },
-        process.env.JWT_SECRET
+        secretKey
         , 
         {
             expiresIn: "1h",

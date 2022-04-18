@@ -15,7 +15,7 @@ describe("Register User Use Case", () => {
         );
 
         const response = await sut.perform(userBuilder);
-
+            
         expect(response).not.toBeUndefined()
     })
 
@@ -30,8 +30,10 @@ describe("Register User Use Case", () => {
             userRepository
         )
 
+        const {name, email, password} = userBuilder
+
         expect(async () => {
-            await sut.perform(userBuilder)
+            await sut.perform({name, email, password})
         }).rejects.toThrow("User email is already been used")
     })
     

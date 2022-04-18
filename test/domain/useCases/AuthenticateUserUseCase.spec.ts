@@ -28,7 +28,7 @@ describe("Authenticate User Use Case" , () => {
 
         await userRepository.create(userBuilder)
 
-        const response = await sut.perform({...userBuilder, password: "1234"})
+        const response = await sut.perform({...userBuilder, password: "123456"})
 
         expect(response.token).not.toBeUndefined()
     })

@@ -52,8 +52,14 @@ export class Validate {
     }
 
     private validatePassword(password: string) {
+        
+        //Check ideal password security measures
         const validPassword = validator.isStrongPassword(password, {
-            minLength: 6
+            minLength: 6,
+            minSymbols: 0,
+            minUppercase: 0,
+            minLowercase: 0,
+            minNumbers: 0
         })
 
         return this.checkResult(validPassword)
@@ -77,6 +83,7 @@ export class Validate {
     }
 
     private checkResult(result: any) {
+        
         if(result) {
             return result
         }
