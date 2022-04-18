@@ -6,6 +6,8 @@ import { bookRouter } from "./routes/books/book-routes";
 import { rentRouter } from "./routes/rents/rent-routes";
 import { userRouter } from "./routes/users/user-routes";
 import { checkAuthMiddleware } from "../presenters/middlewares/check-auth-middleware";
+import { checkAdminMiddleware } from "../presenters/middlewares/check-admin-middleware";
+
 
 //create one specific limiter for post methods
 const limiter = rateLimit({
@@ -19,7 +21,7 @@ const app = express();
 
 app.use(json())
 app.use(limiter)
-app.use("/books", bookRouter);
+app.use("/books", checkAuthMiddleware, checkAdminMiddleware,bookRouter);
 app.use("/users", userRouter);
 app.use("/rents", rentRouter);
 

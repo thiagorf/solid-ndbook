@@ -27,8 +27,6 @@ export class AuthenticateUserUseCase {
         
         const secretKey = process.env.JWT_SECRET  || "secret";
         
-        console.log(secretKey);
-        
         if(!secretKey) throw new Error("Invalid token signature")
 
         const token = jwt.sign({
