@@ -18,7 +18,9 @@ A simple book rent node.js application, build with clean architecture and tdd pr
 
 - [ ] SearchBookUseCase (with filter and pagination)
 
+
 ## How to run the project
+
 
 ```console
     git clone "repository url"
@@ -29,6 +31,7 @@ A simple book rent node.js application, build with clean architecture and tdd pr
 
 ```
 
+Now you can send requests to http://localhost:8000
 
 # Request and responses
 
