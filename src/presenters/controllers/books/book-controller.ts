@@ -5,7 +5,11 @@ export class BookController {
 
     async get(request: Request, response: Response) {
 
-        const result = await returnAllBooksUseCase.perform() 
+        const limit = request.query.limit as string;
+        const cursor = request.query.cursor as string;
+
+        
+        const result = await returnAllBooksUseCase.perform({limit, cursor}) 
 
         return response.json(result)
     }

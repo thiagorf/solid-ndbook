@@ -20,8 +20,8 @@ const limiter = rateLimit({
 const app = express();
 
 app.use(json())
-app.use(limiter)
-app.use("/books", checkAuthMiddleware, checkAdminMiddleware,bookRouter);
+//app.use(limiter)
+app.use("/books", bookRouter);
 app.use("/users", userRouter);
 app.use("/rents", rentRouter);
 
