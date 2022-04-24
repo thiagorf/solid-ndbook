@@ -8,9 +8,7 @@ const bookRepository = new PrismaBookRepository()
 const stockRepository = new PrismaStockRepository()
 
 
-const returnAllBooksUseCase = new ReturnAllBooksUseCase(
-    bookRepository
-)
+const returnAllBooksUseCase = new ReturnAllBooksUseCase()
 
 const registerBookUseCase = new RegisterBookUseCase(
     bookRepository,

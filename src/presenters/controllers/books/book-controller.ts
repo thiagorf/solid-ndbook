@@ -1,15 +1,21 @@
 import { Request, Response } from "express"
 import { registerBookUseCase, returnAllBooksUseCase } from "./abstraction"
 
+interface PageAction {
+    next?: "",
+    previous?: ""
+}
+
+
 export class BookController {
 
     async get(request: Request, response: Response) {
 
         const limit = request.query.limit as string;
-        const cursor = request.query.cursor as string;
-
+        const cursor = request.query.cursor as PageAction;
+        const search = request.query.q as string;
         
-        const result = await returnAllBooksUseCase.perform({limit, cursor}) 
+        const result = await returnAllBooksUseCase.perform({limit, cursor, search}) 
 
         return response.json(result)
     }

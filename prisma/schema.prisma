@@ -21,7 +21,12 @@ model Book {
   stock Stock @relation(references: [id], fields: [stock_id])
   stock_id String
 
+  textsearch Unsupported("TSVECTOR")?
+
+
   rent Rent[]
+
+  @@index([textsearch])
 }
 
 model Stock {
@@ -63,4 +68,9 @@ model Rent {
   receive_date DateTime?
   inProgress Boolean @default(true)
 
+}
+
+model Author {
+  id String @id @default(uuid())
+  name String
 }
