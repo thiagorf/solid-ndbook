@@ -8,15 +8,13 @@ A simple book rent node.js application, build with clean architecture and tdd pr
 
 ## Todo Use cases
 - [x] RegisterBookUseCase
-- [X] RenturnAllBooksUseCase
+- [X] RenturnAllBooksUseCase (with filter and pagination)
 
 - [X] RegisterUserUseCase
 - [X] AuthenticateUserUseCase
 
 - [x] RentBookUseCase
 - [X] FinishRentUseCase
-
-- [ ] SearchBookUseCase (with filter and pagination)
 
 
 ## How to run the project
@@ -25,6 +23,7 @@ A simple book rent node.js application, build with clean architecture and tdd pr
 ```console
     git clone "repository url"
     cd folder_name
+    change file .example.env to .env with your credentials
     npm install or yarn install
     npx prisma generate dev or yarn prisma generate dev
     npm run dev or yarn dev
@@ -43,6 +42,15 @@ Now you can send requests to http://localhost:8000
 * POST /users/authenticate
 * POST /rents
 * PUT /rents/:id/finish
+
+Most routes have a generic error responses like this
+
+```
+  {
+	  "msg": "User email is already been used"
+  }
+```
+
 
 ## POST /books
 
@@ -80,18 +88,42 @@ Successful request will retun the created resource
 
 Example: GET http://example/api/books
 
+All request from this routes are paginated, and they have two optional query strings.
+
+  - ?limit= 
+    - how many elements per page
+  - ?cursor[next]= and ?cursor[previous]=
+    - it's a opaque cursor with the direction it should move in a group of resouces. 
+    - only after the first request that the cursor should be provided in the query string.
+      - 1º request http://example/api/books
+      - 2º request http://example/api/books?cursor[next]=opaque-cursor
+
+
 ```
-[
-  { 
-    "id": "62363361-f628-4aa5-ae18-996c5027bb36",
-    "name": "Clean Architecture",
-    "description": "It's a good book",
-    "publish_date": "2022-04-13T13:18:44.028Z",
-    "created_at": "2022-04-13T13:18:44.231Z",
-    "stock_id": "1e226515-cda1-476f-81ef-b74314c3c28f"
-  }
-]
+{
+	"books": [
+		{
+			"id": "5740e795-1a93-4079-be77-f3b44e6dec33",
+			"name": "Sample book 1",
+			"description": "It's a good book",
+			"publish_date": "2022-04-21T16:45:36.982+00:00",
+			"created_at": "2022-04-21T16:45:37.010+00:00",
+			"stock_id": "2da75a0d-73de-4198-b0ef-1fc2fda15887"
+		},
+		{
+			"id": "8614a805-703c-456f-85a8-1aa5eef0d1a4",
+			"name": "Sample book 2",
+			"description": "It's a good book",
+			"publish_date": "2022-04-21T16:45:39.305+00:00",
+			"created_at": "2022-04-21T16:45:39.335+00:00",
+			"stock_id": "51377e04-d9d5-4a55-a5b5-ad7f001636bf"
+		}
+	],
+	"cursor": "ODYxNGE4MDUtNzAzYy00NTZmLTg1YTgtMWFhNWVlZjBkMWE0"
+}
 ```
+
+
 
 ## POST /users
 
