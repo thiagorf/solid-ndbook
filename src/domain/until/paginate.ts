@@ -1,6 +1,6 @@
 import prisma from "../../infra/prisma-client";
 import { Book } from "../entities/Book";
-import { Buffer } from "buffer"
+import { decode, encode } from "."
 
 interface QueryParams {
     limit: number;
@@ -8,163 +8,102 @@ interface QueryParams {
     search?: string;
 }
 
-interface RequestQuery {
-    limit: number;
-    cursor: {
-        next?: "",
-        previous?: ""
-    };
-    search?: string;
-}
 
-const formatResult = (books: Book[], limit: number) => {
-    const takeBooks = books.slice(0, limit);
-    const opaqueCursor = Buffer.from(takeBooks[limit - 1].id).toString("base64");
+export class PaginateResources {
+    private limit: number;
+    private cursor: string;
+    private search: string
 
-    return {
-        books: takeBooks,
-        cursor: opaqueCursor
-    }
-}
-
-const decodeBuffer = (cursor: string) => Buffer.from(cursor, "base64").toString("ascii");
-
-
-
-const paginateNextPage = async ({limit, cursor, search}: QueryParams) => {
-
-    if(cursor && search) {
-        const previousCursor = await prisma.book.findUnique({
-            where: {
-                id: decodeBuffer(cursor)
-            }
-        })
-
-        const books: Book[] = await prisma.$queryRaw`
-        SELECT id, name, description, publish_date, created_at, stock_id 
-        FROM "Book"
-        WHERE "created_at" > ${previousCursor.created_at} AND
-        "textsearch" @@ to_tsquery(${search + ':*'})
-        LIMIT ${limit + 1}
-        ORDER BY "created_at" ASC
-    `;
-
-        return formatResult(books, limit)
-    }
-
-    if(cursor && !search) {
-
-        const previousCursor = await prisma.book.findUnique({
-            where: {
-                id: decodeBuffer(cursor)
-            }
-        })
-
-        const books: Book[] = await prisma.$queryRaw`
-            SELECT id, name, description, publish_date, created_at, stock_id 
-            FROM "Book"
-            WHERE "created_at" > ${previousCursor.created_at}
-            LIMIT ${limit + 1}
-        `;
-
-        return formatResult(books, limit)
-    }
-
-    if(!cursor && search) {
-        const books: Book[] = await prisma.$queryRaw`
-            SELECT id, name, description, publish_date, created_at, stock_id  
-            FROM "Book"
-            WHERE "textsearch" @@ to_tsquery(${search + ':*'})
-            LIMIT ${limit + 1}
-            ORDER BY "created_at" ASC
-        `;
-
-        return formatResult(books, limit)
-    }
-
-    const books = await prisma.book.findMany({
-        orderBy: {
-            created_at: "asc"
-        },
-        take: (limit + 1)
-    })
-
-    return formatResult(books, limit)
-
-}
-
-const paginatePreviousPage = async ({limit, cursor, search}: QueryParams) => {
-
-    if(cursor && search) {
-        const previousCursor = await prisma.book.findUnique({
-            where: {
-                id: decodeBuffer(cursor)
-            }
-        })
-
-        const books: Book[] = await prisma.$queryRaw`
-        SELECT id, name, description, publish_date, created_at, stock_id  
-        FROM "Book"
-        WHERE "created_at" < ${previousCursor.created_at} AND
-        "textsearch" @@ to_tsquery(${search + ':*'})
-        LIMIT ${limit + 1}
-        ORDER BY "created_at" ASC
-    `;
-
-        return formatResult(books, limit)
-    }
-
-    if(cursor && !search) {
-
-        const previousCursor = await prisma.book.findUnique({
-            where: {
-                id: decodeBuffer(cursor)
-            }
-        })
+    constructor(requiredData: QueryParams) {
         
-        const books: Book[] = await prisma.$queryRaw`
-            SELECT id, name, description, publish_date, created_at, stock_id 
-            FROM "Book"
-            WHERE "created_at" < ${previousCursor.created_at}
-            LIMIT ${limit + 1}
-        `;
-
-        return formatResult(books, limit)
+        this.limit = requiredData.limit;
+        this.cursor = requiredData.cursor
+        this.search = requiredData.search
     }
 
-    if(!cursor && search) {
-        const books: Book[] = await prisma.$queryRaw`
-            SELECT id, name, description, publish_date, created_at, stock_id  
-            FROM "Book"
-            WHERE "textsearch" @@ to_tsquery(${search + ':*'})
-            LIMIT ${limit + 1}
-            ORDER BY "created_at" ASC
-        `;
+    async paginate() {
+        const result = await this.paginateNextPage();
 
-        return formatResult(books, limit)
+        return result
     }
 
-    const books = await prisma.book.findMany({
-        orderBy: {
-            created_at: "asc"
-        },
-        take: (limit + 1)
-    })
+    private async paginateNextPage() {
 
-    return formatResult(books, limit)
-}
 
-export const paginate = async ({limit, cursor, search}: RequestQuery) => {
+        if(this.cursor) {
+            const lastCursor = await this.checkCursor()
 
-    if(cursor) {
-        if(cursor.previous) {
-            return await paginatePreviousPage({limit, cursor: cursor.previous, search})
-        } 
-    
-        if(cursor.next) {
-            return await paginateNextPage({limit, cursor: cursor.next, search})
+            const nextBooks = await this.nextPageResults(lastCursor);
+
+            return this.showProperResult(nextBooks)
+        }
+
+
+        const books = await prisma.book.findMany({
+            take: (this.limit + 1),
+            orderBy: {
+                created_at: "asc"
+            }
+        });
+
+        return this.showProperResult(books);
+    }
+
+    private showProperResult(books: Book[]) {
+
+        if(books.length > this.limit) {
+
+            const formatedResult = books.slice(0, this.limit)
+            const lastElement = formatedResult.slice(-1)
+            const opaqueCursor = encode(lastElement[0].id)
+
+            return {
+                books: formatedResult,
+                cursor: opaqueCursor
+            }
+        }
+
+        return {
+            books: books
         }
     }
 
-    return await paginateNextPage({limit, cursor: "", search})
+
+
+    private async nextPageResults(lastResultCursor: Book) {
+        const books = await prisma.book.findMany({
+            take: (this.limit + 1),
+            where: {
+                created_at: {
+                    gt: lastResultCursor.created_at
+                }
+            },
+            orderBy: {
+                created_at: "asc"
+            }
+        })
+
+        return books
+    }
+
+    private async checkCursor() {
+        const actualCursor = await prisma.book.findUnique({
+            where: {
+                id: decode(this.cursor)
+            }
+        });
+
+        if(!actualCursor) {
+            throw new Error("Invalid cursor")
+        }
+
+        return actualCursor
+    }
+
 }
+
+
+
+
+
+
