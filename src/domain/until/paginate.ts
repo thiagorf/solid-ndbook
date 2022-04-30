@@ -24,29 +24,76 @@ export class PaginateResources {
     async paginate() {
         const result = await this.paginateNextPage();
 
-        return result
+        return result;
     }
 
     private async paginateNextPage() {
 
+        if(!this.cursor && !this.search) {
+            const books = await prisma.book.findMany({
+                take: (this.limit + 1),
+                orderBy: {
+                    created_at: "asc"
+                }
+            });
+    
+            return this.showProperResult(books);
+        }
+
+        const books = await this.flowControl()
+
+        return this.showProperResult(books)
+        
+    }
+
+    private async flowControl() {
+        if(this.cursor && this.search) {
+            const lastCursor = await this.checkCursor()
+
+            const textMatchElement = await this.fullTextSeachWithCursor(lastCursor)
+
+            return textMatchElement;
+        }
 
         if(this.cursor) {
             const lastCursor = await this.checkCursor()
 
             const nextBooks = await this.nextPageResults(lastCursor);
 
-            return this.showProperResult(nextBooks)
+            return nextBooks
         }
 
 
-        const books = await prisma.book.findMany({
-            take: (this.limit + 1),
-            orderBy: {
-                created_at: "asc"
-            }
-        });
+        if(this.search) {
+            const textMatchElement = await this.fullTextSearch();
 
-        return this.showProperResult(books);
+            return textMatchElement
+        }
+    }
+
+    private async fullTextSearch() {
+        const books = await prisma.$queryRaw`
+            SELECT id, name, description, publish_date, created_at, stock_id
+            FROM "Book"
+            WHERE "textsearch" @@ to_tsquery(${this.search + ':*'})
+            ORDER BY "created_at" ASC          
+            LIMIT ${(this.limit + 1)}
+        `
+
+        return books as Book[];
+    }
+
+    private async fullTextSeachWithCursor(lastCursor: Book) {
+        const books = await prisma.$queryRaw`
+            SELECT id, name, description, publish_date, created_at, stock_id
+            FROM "Book"
+            WHERE "created_at" > ${lastCursor.created_at} AND
+            "textsearch" @@ to_tsquery(${this.search + ':*'})
+            ORDER BY "created_at" ASC 
+            LIMIT ${(this.limit + 1)}
+        `
+
+        return books as Book[];
     }
 
     private showProperResult(books: Book[]) {

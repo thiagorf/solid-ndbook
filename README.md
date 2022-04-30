@@ -20,15 +20,26 @@ A simple book rent node.js application, build with clean architecture and tdd pr
 ## How to run the project
 
 
-```console
-    git clone "repository url"
-    cd folder_name
-    change file .example.env to .env with your credentials
-    npm install or yarn install
-    npx prisma generate dev or yarn prisma generate dev
-    npm run dev or yarn dev
+
+Clone the repository with ```git clone "repository url"``` or download the project,
+move for the project folder  ```cd folder_name ```, change .example.env file for .env with your credentials.
+
+> full text seach will only work with **postgres**
+
+.env file
+```
+  JWT_SECRET= (a random secret string)
+  DATABASE_URL="database://username:password@localhost:5432/dbname?schema=public"
+```
+
+Install projects dependecies and generate all necessary tables.
 
 ```
+  npm install or yarn install
+  npx prisma generate dev or yarn prisma generate dev
+  npm run dev or yarn dev
+```
+
 
 Now you can send requests to http://localhost:8000
 
@@ -88,15 +99,17 @@ Successful request will retun the created resource
 
 Example: GET http://example/api/books
 
-All request from this routes are paginated, and they have two optional query strings.
+All request from this routes are paginated, and they have three optional query strings.
 
   - ?limit= 
     - how many elements per page
-  - ?cursor[next]= and ?cursor[previous]=
-    - it's a opaque cursor with the direction it should move in a group of resouces. 
+  - ?q=
+    - search for a text match in the title or in description in the book
+  - ?cursor=
+    - it's a opaque cursor, the direction should be handle by the client  
     - only after the first request that the cursor should be provided in the query string.
       - 1º request http://example/api/books
-      - 2º request http://example/api/books?cursor[next]=opaque-cursor
+      - 2º request http://example/api/books?cursor=opaque-cursor
 
 
 ```
