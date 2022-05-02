@@ -1,4 +1,4 @@
-import { PaginateResources } from "../until"
+import { PaginateResources } from "../utils"
 
 interface QueryParams {
     limit: string;
